@@ -3,7 +3,7 @@ const Parser = require("rss-parser");
 const parser = new Parser();
 require("dotenv").config();
 
-let lastEntryDate = new Date();
+let lastEntryDate = null;
 
 async function checkForNewEntries() {
   try {
@@ -27,6 +27,8 @@ async function checkForNewEntries() {
 
     feed.items.forEach((item) => {
       const itemDate = new Date(item.isoDate);
+
+      console.log(itemDate, lastEntryDate);
 
       if (!lastEntryDate || itemDate > lastEntryDate) {
         console.log("New entry found:", item.title);

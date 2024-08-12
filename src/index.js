@@ -1,4 +1,5 @@
 // index.js
+const http = require('http');
 const { checkForNewEntries } = require("./rss-monitor");
 const TelegramBot = require("node-telegram-bot-api");
 const cron = require("node-cron");
@@ -29,9 +30,7 @@ async function notifyNewEntries() {
 
     if (newEntries.length > 0) {
       newEntries.forEach((entry) => {
-        const message = `⚠️⚠️⚠️\n\nNew Job: ${entry.title}\n\nLink: ${
-          entry.link
-        }\n\n*Description*:\n${entry.contentSnippet}`;
+        const message = `⚠️⚠️⚠️\n\nNew Job: ${entry.title}\n\nLink: ${entry.link}\n\n*Description*:\n${entry.contentSnippet}`;
         bot
           .sendMessage(telegramChatId, message)
           .then(() => {
@@ -57,3 +56,13 @@ cron.schedule("*/10 * * * *", () => {
 
 // Initial run
 notifyNewEntries();
+
+// Create a dummy server
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("This is a dummy server for background jobs.\n");
+});
+
+server.listen(3001, () => {
+  console.log(`Server is listening on port 3001`);
+});
